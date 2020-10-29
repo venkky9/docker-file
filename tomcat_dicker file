@@ -1,0 +1,24 @@
+FROM ubuntu
+
+MAINTAINER aksarav@middlewareinventory.com
+
+RUN mkdir /opt/tomcat/
+RUN apt-get update -y && apt-get install unzip -y
+RUN apt-get install curl -y
+RUN apt install wget -y
+
+WORKDIR /opt/tomcat
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.0/bin/apache-tomcat-8.5.0.zip
+RUN unzip apache-tomcat-8.5.0.zip
+RUN mv apache-tomcat-8.5.0/* /opt/tomcat/.
+RUN apt-get install openjdk-8* -y
+RUN java -version
+
+WORKDIR /opt/tomcat/webapps
+RUN curl -O -L https://updates.jenkins-ci.org/download/war/2.252/jenkins.war
+
+EXPOSE 8080
+
+RUN chmod +x /opt/tomcat/bin/catalina.sh
+
+CMD ["/opt/tomcat/bin/catalina.sh", "run"]
